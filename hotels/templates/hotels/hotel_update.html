@@ -1,0 +1,83 @@
+{% extends "__base.html" %}
+{% load static %}
+{% load psbookingtags %}
+{% block title %}PS-booking -редактирование отеля{% endblock %}
+
+{% block content %}
+{% include "accounts/__menu.html" %}
+
+        <div class="col-lg-9">
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="dashboard-title">
+                            <h4 class="mb-0">Основная информация</h4>
+                        </div>
+                        <div class="card-body">
+                            <form action="." id="cuForm" method="post" enctype="multipart/form-data" data-towns-url="{% url 'ajax_load_towns' %}" novalidate>
+								{% csrf_token %}
+							    {% for field in form %}
+                                <div class="mb-3{% if field.name == 'picture' %}
+                                 text-start{% endif %}{% if field.name == 'is_renovated' %} form-check{% endif %}">
+                                    {{ field.label_tag }}{% if field.name == 'is_renovated' %}{{ field }}
+                                    {% else %}
+                                    {{ field }}
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                                <button type="submit" class="nir-btn">
+                                    Сохранить
+                                </button>
+                            </form>
+                       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+					   <script src="{% static 'js/ajax_towns.js' %}"></script>
+                       </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="dashboard-title">
+                            <h4 class="mb-0">Номерной фонд</h4>
+                        </div>
+                        <div class="table-responsive table-desi">
+                            <table class="basic-table table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Фото</th>
+                                    <th>Тип номера</th>
+                                    <th>Цена за ночь</th>
+                                    <th>Описание</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+								{% for room in rooms %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ room.get_absolute_url }}">
+                                            <img src="{{ room.picture_url }}" alt="" class="w-25">
+                                        </a>
+                                    </td>
+                                    <td>{{ room.room_class_vis }}</td>
+                                    <td>{{ room.price|num_dot }}</td>
+                                    <td>{{ room.description }}</td>
+                                </tr>
+								{% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if edit %}
+						<div>
+                            <a href="{% url 'hotels:room_create' hotel.pk %}" class="nir-btn m-3">Добавить номер</a>
+                        </div>
+						{% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Dashboard ends -->
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "__base.html" %}
+{% load static %}
+{% load psbookingtags %}
+{% block title %}PS-booking - мой профайл{% endblock %}
+
+{% block content %}
+{% include "accounts/__menu.html" %}
+{% with 'Мой профайл' as title %}
+{% include "accounts/__title.html" %}
+{% endwith %}
+                <div class="card-body">
+                    <form action="." id="cuForm" method="post" enctype="multipart/form-data" data-towns-url="{% url 'ajax_load_towns' %}" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3 text-start">
+                            {{ child_form.avatar.label_tag }}
+                            {{ child_form.avatar }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.username.label_tag }}
+                            {{ form.username }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                        </div>
+                         {% if form.email.errors %}
+                         <div class="alert alert-danger">
+                            {{ form.email.errors }}
+                        </div>
+                        {% endif %}
+                        {% for field in child_form %}
+                        {%  if not field.name == 'avatar' %}
+                        <div class="mb-3">
+                            {{ field.label_tag }}
+                            {{ field }}
+                        </div>
+                        {% endif %}
+                        {%  endfor %}
+                        <button type="submit" class="nir-btn">
+                            Сохранить
+                        </button>
+                    </form>
+					
+					  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+					  <script src="{% static 'js/ajax_towns.js' %}"></script>
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="dashboard-title">
+                    <h4 class="mb-0">Пароль</h4>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'accounts:change_password' %}" class="btn btn-primary mb-2">Изменить пароль</a>
+                    <a href="{% url 'accounts:password_reset' %}" class="btn btn-outline-secondary mb-2">Сбросить пароль</a>
+                </div>
+            </div>
+            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-danger mt-5">Выход</a>
+        </div>
+    </div>
+</div>
+<!-- Dashboard ends -->
+
+{% endblock %}

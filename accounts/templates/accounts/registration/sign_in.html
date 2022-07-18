@@ -1,0 +1,51 @@
+{% extends "__base.html" %}
+{% load static %}
+{% block title %}PS-booking - вход{% endblock %}
+
+{% block content %}
+{% load socialaccount %}
+{% with 'ВХОД' as head %}
+   {% include "snippets/_breadcrumb.html" %}
+{% endwith %}
+<!-- hotel detail starts -->
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center" style="min-height: calc(100vh - 453px)">
+        <div class="col-auto mb-4">
+            <div class="login-content border p-4">
+                {% if form.non_field_errors %}
+				<div class="alert alert-danger">
+					{{ form.non_field_errors }}
+				</div>
+                {% endif %}
+                <h4 class="">Вход на PS-Booking</h4>
+                <form action="." method="post">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        {{ form.login.label_tag }}
+                        {{ form.login }}
+                    </div>   
+					<div class="form-group mb-3">
+                        {{ form.password.label_tag }}
+						{{ form.password }}
+                    </div>
+					<div class="form-group form-checkbox text-center mb-1">                   
+                        {{ form.remember}} {{form.remember.label_tag }}
+						<a href="{% url 'accounts:password_reset' %}">Забыли пароль?</a>
+					</div>
+                    <div class="form-btn text-center">
+                        <button type="submit" class="nir-btn">Войти</button>
+                    </div>
+                </form>
+				<div class="login-social text-center mt-5 mb-2">
+                    <p class=""><strong>- или войти через соц.сети -</strong></p>
+                    <a href="{% provider_login_url 'vk' %}" class="btn btn-dark btn-block">
+                        <i class="fab fa-vk"></i>
+                        Войти через VK
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- hotel detail Ends -->
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "__base.html" %}
+{% load static %}
+{% load psbookingtags %}
+{% block title %}PS-booking - отели{% endblock %}
+
+{% block content %}
+
+{% with 'Бронирование отеля' as head %}
+   {% include "snippets/_breadcrumb.html" %}
+{% endwith %}
+{% include "snippets/_messages.html" %}
+<!-- hotel detail starts -->
+<div class="container mt-5 pt-5">
+    <div class="row">
+        <div class="col mb-4">
+            <!-- description -->
+            <div class="description">
+                <div class="border-b mb-2 pb-2">
+                    {% if hotel.is_renovated %}
+                    <p class="my-3">
+                        <span class="bg-pink p-3 text-white">Недавно отремонтирован</span>
+                    </p>
+                    {% endif %}
+                    <h4 class="font-weight-bold mb-0 me-2 d-inline-block">
+                        {{ hotel.title }}
+                    </h4>
+                    <div class="rating d-inline-block">
+                        {% autoescape off %}
+                        {% star_line hotel.category %}
+                        {% endautoescape %}
+                    </div>
+                    <p class="mb-0">
+                        <i class="bi bi-geo-alt me-2"></i>{{ hotel.town }}, {{ hotel.country }}
+                    </p>
+                </div>
+
+                <img src="{{ hotel.picture_url }}" alt="image">
+
+                <div class="my-4">
+                    <h4>Описание</h4>
+                    {% autoescape off %}
+                    {{ hotel.description }}
+                    {% endautoescape %}
+                </div>
+
+                <div class="my-4">
+                    <h4>Сервис</h4>
+                    <table class="table">
+                        <tbody>
+                        {% for opt in hotel.options.all%}
+                        <tr>
+                            <th>{{ forloop.counter }}</th>
+                            <td>{{ opt }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="my-4 card shadow-sm">
+                    <div class="card-body">
+                        <h4>Наличие мест</h4>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h5>Дата заезда</h5>
+                                <h6 class="text-primary">{{ cin|date:"d E Y"|default:'-"-' }}</h6>
+                                <!--                                <h6 class="text-secondary">&#45;&#45;</h6>-->
+                            </div>
+                            <div class="col-md-3">
+                                <h5>Дата отъезда</h5>
+                                <h6 class="text-primary">{{ cout|date:"d E Y"|default:'-"-' }}</h6>
+                                <!--                                <h6 class="text-secondary">&#45;&#45;</h6>-->
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <h5>Доступность</h5>
+                                <!-- available -->
+                                <h6 class="text-success"><i class="bi bi-calendar-check me-2"></i>{{ availability }}</h6>
+                                <!-- not available -->
+                                <!-- lack of information-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-4">
+                    <h4>Выбор номера</h4>
+                    {% for room in rooms %}
+                    <div class="card mb-3">
+                        <div class="row g-0 align-items-center">
+                            <div class="col-md-4">
+                                <img src="{{ room.picture_url }}" class="img-fluid rounded-start" alt="room">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h4 class="card-title">{{ room.room_class_vis }}</h4>
+                                            <p class="card-text">{{ room.description }}</p>
+                                        </div>
+                                        <div class="col-md-4 text-center">
+											{% if state and state|get_val:room.pk %}
+											<p class="mb-1">{{ room.price|stringformat:'0.2f' }} / ночь</p>
+                                            {% if person %}
+                                            <a href="{% url 'hotels:room_book' room.pk %}" class="nir-btn w-100">Я бронирую</a>
+                                            {% else %}
+                                            <a href="{% url 'main:index' %}" class="nir-btn w-100">Забронировать через главную страницу</a>
+                                            {% endif %}
+											{% endif %}
+											{% if state and not state|get_val:room.pk %}
+											<p class="mb-1 text-danger">На выбранные даты мест нет</p>
+                                            {% endif %}
+											{% if not state %}
+											<p class="mb-1">{{ room.price|stringformat:'0.2f' }} / ночь</p>
+											<a href="{% url 'main:index' %}" class="btn btn-outline-secondary">
+                                                Указать даты поездки
+                                            </a> 
+											{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="my-4">
+                    <h4>Рейтинг отеля</h4>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4">
+                            <div class="bg-pink text-center p-4">
+                                <h2 class="text-white"><span>{{ avg_rate|stringformat:'0.1f' }}</span>/5</h2>
+                                {% with reviews.count as rc  %}
+                                <p class="text-white">Всего {{rc }} {% plural rc "отзыв" "отзыва" "отзывов" %}</p>
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="single-comments single-box my-4">
+                    <h4>Отзывы</h4>
+                    <div class="row">
+                        <div class="col">
+                            {% for rev in reviews %}
+                            <div class="comment-box">
+                                <div class="comment-image">
+                                    <img src="{% avatar rev.user %}" alt="user">
+                                </div>
+                                <div class="comment-content w-100">
+                                    <h5 class="mb-1">{{ rev.user.get_full_name }}</h5>
+                                    <p class="comment-date">{{ rev.created|date:"j E Y" }}</p>
+                                    <div class="comment-rate">
+                                        <div class="rating mar-right-15">
+                                            {% autoescape off %}
+                                            {% star_line rev.rate %}
+                                            {% endautoescape %}
+                                        </div>
+                                    </div>
+                                    <p class="comment">{{ rev.text }}</p>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <h5>Отзывов нет</h5>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-4">
+                    <h4>Оставить отзыв</h4>
+                    <div class="my-4 card border-0 shadow">
+                        <div class="card-body">
+                            <form action="{% url 'hotels:hotel_send_review' %}" method="post">
+                                {% csrf_token %}
+                                {{ review_form }}
+                                <button type="submit" class="btn btn-primary mt-3">Отправить отзыв</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- hotel detail Ends -->
+
+{% endblock %}

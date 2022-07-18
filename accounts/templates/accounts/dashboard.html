@@ -1,0 +1,86 @@
+{% extends "__base.html" %}
+{% load static %}
+{% load psbookingtags %}
+{% block title %}PS-booking - dashboard{% endblock %}
+
+{% block content %}
+{% include "accounts/__menu.html" %}
+        {% if access %}
+        <div class="col-lg-9">
+            <div class="row">
+				{% if visual %}
+                <div class="col-lg-4">
+                    <div class="dashboard-stat mb-4">
+                        <div class="dashboard-stat-content"><h4>{{ user_count }}</h4> <span>
+						{% plural user_count "Пользователь" "Пользователя" "Пользователей" %}</span></div>
+                        <div class="dashboard-stat-icon"><i class="bi bi-person"></i></div>
+                        <div class="dashboard-stat-item"><p>Пользователей зарегистрировано на сайте</p></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="dashboard-stat mb-4">
+                        <div class="dashboard-stat-content"><h4>{{ res_count }}</h4> <span>
+						{% plural res_count "Бронирование" "Бронирования" "Бронирований" %} </span></div>
+                        <div class="dashboard-stat-icon"><i class="bi bi-bar-chart-line"></i></div>
+                        <div class="dashboard-stat-item"><p>Количество забронированных номеров</p></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="dashboard-stat mb-4">
+                        <div class="dashboard-stat-content"><h4>{{ rev_count }}</h4> <span>{% plural rev_count "Отзыв" "Отзыва" "Отзывов" %}</span></div>
+                        <div class="dashboard-stat-icon"><i class="bi bi-chat-quote"></i></div>
+                        <div class="dashboard-stat-item"><p>Оставлено отзывов</p></div>
+                    </div>
+                </div>
+				{% endif %}
+            </div>
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="shadow-sm rounded">
+                        <div class="dashboard-title">
+                            <h4 class="mb-0">Отели</h4>
+                        </div>
+                        <div class="table-responsive table-desi">
+                            <table class="basic-table table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Страна</th>
+                                    <th>Город</th>
+                                    <th>Отель</th>
+                                    <th>Бронирований</th>
+                                    <th>Отзывов</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+								{% for hotel in hotels%}
+                                <tr>
+                                    <td>{{ hotel.country }}</td>
+                                    <td>{{ hotel.town }}</td>
+                                    <td><a href="{{ hotel.get_url_update }}">{{ hotel.title }}</a></td>
+                                    <td>{{ hotel.res_count|default:'--' }}</td>
+                                    <td>{{ hotel.rev_count|default:'--' }}</td>
+                                </tr>
+								{% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href= "{% url 'hotels:hotel_create' %}" class="nir-btn m-3">Добавить отель</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-lg-9">
+            <div class="row" style="min-height: calc(100vh - 453px)">
+            <div class="col mb-4">
+            <h1>403 Forbidden - недостаточно прав для просмотра этого раздела сайта</h1>
+        </div>
+        {% endif %}
+    </div>
+</div>
+    </div>
+</div>
+<!-- Dashboard ends -->
+{% endblock %}

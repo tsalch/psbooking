@@ -1,0 +1,41 @@
+{% extends "__base.html" %}
+{% load static %}
+{% load psbookingtags %}
+{% block title %}PS-booking - отзывы{% endblock %}
+
+{% block content %}
+{% include "accounts/__menu.html" %}
+{% with 'Отзывы' as title %}
+{% include "accounts/__title.html" %}
+{% endwith %}
+                        <div class="table-responsive table-desi">
+                            <table class="basic-table table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Тур</th>
+                                    <th>Оценка</th>
+                                    <th>Отзыв</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for review in review_list %}
+                                <tr>
+                                    <td>{{ review.hotel }}, {{ review.hotel.category }}*<br>
+                                        <i class="bi bi-geo-alt me-1"></i>{{ review.hotel.town }}, {{ review.hotel.country }} <br>
+                                        <i class="bi bi-calendar4-event me-1"></i>{{ review.check_in|date:"d.m.Y"|default:"-" }} - {{ review.check_out|date:"d.m.Y"|default:"-"}}
+                                    </td>
+                                    <th>{{ review.rate }}</th>
+                                    <th>{{ review.text }} </th>
+                                </tr>
+                                {%  endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Dashboard ends -->
+{% endblock %}

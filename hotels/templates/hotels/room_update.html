@@ -1,0 +1,32 @@
+{% extends "__base.html" %}
+{% load static %}
+{% load psbookingtags %}
+{% block title %}PS-booking - редактирование номера{% endblock %}
+
+{% block content %}
+{% include "accounts/__menu.html" %}
+
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm">
+                <div class="dashboard-title">
+                    <h4 class="mb-0">
+                        Номер {{ rc }},
+                        <a href="{% url 'hotels:hotel_update' hotel.pk %}" class="pink">{{ hotel.title }}</a>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {{ form.non_form_errors }}
+                    <form action="." method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+						{% include "hotels/_room.html" %}
+                        <button type="submit" class="nir-btn">
+                            Сохранить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Dashboard ends -->
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "__base.html" %}
+{% load static %}
+{% load psbookingtags %}
+{% block title %}PS-booking - редактирование номера{% endblock %}
+
+{% block content %}
+{% include "accounts/__menu.html" %}
+
+		<div class="col-lg-9">
+            <div class="card border-0 shadow-sm">
+                <div class="dashboard-title">
+					<h2 class="text-success">Отменить бронь?</h2>
+                </div>
+				<div class="card-body">
+					<p class="my-4">
+						Вы уверены что хотите отменить бронь?
+					</p>
+				
+					<div class="button-list">
+						<form action="." method="post">
+							{% csrf_token %}
+							<button type="submit" class="btn btn-danger">
+								Да,отменить
+							</button>
+							<a href="{% url 'accounts:booking_list' %}" class="btn btn-success">
+								Нет, не отменять
+							</a>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% load static %}
+{% load psbookingtags %}
+<!-- BreadCrumb Starts -->
+<section class="breadcrumb-main pb-2" style="background-image: url({% static 'images/bg/bg8.jpg' %});">
+    <div class="dot-overlay"></div>
+</section>
+<!-- BreadCrumb Ends -->
+{% include "snippets/_messages.html" %}
+<!-- Dashboard starts -->
+<div class="container my-5 py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="author-news mb-3">
+                <div class="author-news-content text-center py-3 bg-secondary">
+                    <div class="author-thumb my-1">
+                        <img src="{% avatar user %}" alt="author">
+                    </div>
+                    <h3 class="mb-1 white"><a href="{% url 'accounts:profile' %}" class="white">{{ user.get_full_name }}</a></h3>
+                    <p class="text-white"><i class="bi bi-phone"></i>{{ user.profile.phone|default:'' }}</p>
+                </div>
+            </div>
+            <!-- Responsive Navigation Trigger -->
+            <a href="#" class="dashboard-responsive-nav-trigger">
+                <i class="bi bi-justify"></i> Меню
+            </a>
+            <div class="dashboard-nav mb-3">
+                <ul>
+                    <li {% if mdash %}class="active"{% endif %}>
+                        <a href="{% url 'accounts:dashboard' %}">
+                            <i class="bi bi-box"></i>Dashboard
+                        </a>
+                    </li>
+                    <li {% if mprof %}class="active"{% endif %}>
+                        <a href="{% url 'accounts:profile' %}">
+                            <i class="bi bi-person-square"></i>Профайл
+                        </a>
+                    </li>
+                    <li {% if mbook %}class="active"{% endif %}>
+                        <a href="{% url 'accounts:booking_list' %}">
+                            <i class="bi bi-bag-check"></i>Бронирования
+                        </a>
+                    </li>
+                    <li {% if mrev %}class="active"{% endif %}>
+                        <a href="{% url 'accounts:review_list' %}">
+                            <i class="bi bi-chat-quote"></i>Отзывы
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>

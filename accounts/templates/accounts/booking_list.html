@@ -1,0 +1,47 @@
+{% extends "__base.html" %}
+{% load static %}
+{% load psbookingtags %}
+{% block title %}PS-booking - бронирования{% endblock %}
+
+{% block content %}
+{% include "accounts/__menu.html" %}
+{% with 'Бронирования' as title %}
+{% include "accounts/__title.html" %}
+{% endwith %}
+                <div class="table-responsive table-desi">
+                    <table class="basic-table table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Страна</th>
+                            <th>Город</th>
+                            <th>Отель</th>
+                            <th>Дата заезда</th>
+                            <th>Дата отъезда</th>
+                            <th>Моя оценка</th>
+                            <th>Отменить бронь</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for res in reservation_list %}
+                        <tr>
+                            <td>{{ res.hotel.country }}</td>
+                            <td>{{ res.hotel.town }}</td>
+                            <td>{{ res.hotel.title }}, {{ res.hotel.category }}*</td>
+                            <td>{{ res.check_in|date:"d.m.Y" }}</td>
+                            <td>{{ res.check_out|date:"d.m.Y" }}</td>
+                            <th>{{ res.rate|default:"--" }}</th>
+                            {% if cancel and res.check_out > today %}
+                            <th><a href="{{ res.get_absolute_url }}" class="btn btn-sm btn-danger">Отменить</a></th>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Dashboard ends -->
+
+{% endblock %}
