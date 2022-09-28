@@ -1,3 +1,5 @@
+from datetime import date
+
 from django import forms
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -5,7 +7,6 @@ from django.utils.safestring import mark_safe
 
 from hotels.models import Country, Hotel, Reservation, Review, Room, Option
 from utils.forms import update_fields_widget, update_fields_widget_dict, init_town
-from datetime import date
 
 
 class HotelFilterFormDDC(forms.Form):

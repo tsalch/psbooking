@@ -1,5 +1,6 @@
 from django.contrib.auth.views import LogoutView, PasswordChangeView, PasswordChangeDoneView
 from django.urls import path, reverse_lazy
+
 from . import views
 from .forms import CustomPasswordChangeForm
 

@@ -8,12 +8,8 @@ from django.views.generic import TemplateView
 
 from hotels.forms import HotelFilterFormDDC
 from hotels.models import Country, Hotel, Review
-
-from allauth.socialaccount.models import SocialAccount
-
 from utils.views import hotel_query
 
-from django.db.models import F
 
 class IndexView(TemplateView):
     template_name = 'main/index.html'

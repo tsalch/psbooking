@@ -1,12 +1,11 @@
 from allauth.account.forms import LoginForm, SignupForm
 from django import forms
-from django.contrib.auth.forms import (UserCreationForm, PasswordChangeForm,
+from django.contrib.auth.forms import (PasswordChangeForm,
                                        PasswordResetForm, SetPasswordForm)
 from django.contrib.auth.models import User
-from hotels.models import Town
 
 from accounts.models import Profile
-from utils.forms import update_fields_widget, update_fields_widget_dict, init_town
+from utils.forms import update_fields_widget, init_town
 
 
 class CustomUserCreationForm(SignupForm):

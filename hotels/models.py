@@ -1,11 +1,12 @@
-from django.urls import reverse
 from django.conf import settings
-from django.db import models
 from django.contrib.auth.models import User
-from utils.models import generate_unique_slug
+from django.db import models
+from django.db.models import Min, Q
+from django.urls import reverse
 from django.utils.text import slugify
 from unidecode import unidecode
-from django.db.models import Avg, Min, Count, Q, F
+
+from utils.models import generate_unique_slug
 
 
 class Country(models.Model):

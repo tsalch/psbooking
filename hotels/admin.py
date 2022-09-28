@@ -31,7 +31,9 @@ class RoomAdmin(admin.ModelAdmin):
 
 @admin.register(models.Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['user', 'hotel', 'room', 'check_in', 'check_out']
+    list_select_related = ['user', 'hotel', 'room']
+    list_filter = ['hotel']
 
 
 @admin.register(models.Review)
