@@ -34,7 +34,7 @@
                                 {% endwith %}
                             </div>
                             <h4 class="mb-0">
-                                <a href="hotel_booking.html">{{ hotel.title }}, {{ hotel.category }}*</a>
+                                <a href="{{ hotel.get_absolute_url }}">{{ hotel.title }}, {{ hotel.category }}*</a>
                             </h4>
                             <p class="mb-2">
                                 От <span class="font-weight-bold pink">{{ hotel.min_price|default:0|num_dot }} </span>/ ночь
