@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views.generic.edit import ProcessFormView
+from django.core.exceptions import PermissionDenied
 
 from hotels.models import Town, Hotel, Room, Review, Reservation
 from utils.views import hotel_query
@@ -44,6 +45,7 @@ class HotelListView(ListView):
             filter_stars = form.cleaned_data['stars']
             filter_service = form.cleaned_data['service']
             filter_person = self.request.session.get('person', False)
+            condi_pers = [filter_person] if filter_person else list(range(1, 6))
             if filter_destination:
                 queryset = queryset.filter(country=filter_destination)
             if filter_stars:
@@ -54,11 +56,11 @@ class HotelListView(ListView):
             if filter_price_min or filter_price_max:
                 if filter_price_min:
                     hotels = [hotel.id for hotel in queryset if
-                              hotel.rooms.filter(price__gte=filter_price_min).exists()]
+                              hotel.rooms.filter(capacity__in=condi_pers, price__gte=filter_price_min).exists()]
                     queryset = queryset.filter(id__in=hotels)
                 if filter_price_max:
                     hotels = [hotel.id for hotel in queryset if
-                              hotel.rooms.filter(price__lte=filter_price_max).exists()]
+                              hotel.rooms.filter(capacity__in=condi_pers, price__lte=filter_price_max).exists()]
                     queryset = queryset.filter(id__in=hotels)
             if filter_person:
                 hotels = [hotel.id for hotel in queryset if
@@ -248,11 +250,11 @@ class ReservationDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         reserv = super().get_object(queryset)
-        if not Reservation.objects.filter(pk=reserv.pk).exists():
-            messages.info(self.request, 'Брони уже нет')
-            raise self.success_url
-        else:
+        if reserv.user == self.request.user:
             return reserv
+        else:
+            messages.info(self.request, 'Это не ваша бронь!')
+            raise PermissionDenied()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
