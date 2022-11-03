@@ -118,7 +118,7 @@ class Hotel(models.Model):
     @property
     def favg_rate(self):
         avg_rate = self.reviews.aggregate(models.Avg('rate'))['rate__avg']
-        if not avg_rate: avg_rate = 0
+        avg_rate = avg_rate or 0
         return round(avg_rate, 1)
 
     def is_available(self, dstart, dend, person):

@@ -176,15 +176,15 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         role = self.request.user.profile.role
         context['dashboard'] = True
         context['mdash'] = True
-        if role == 'u':
+        if role == Profile.USER_ROLE_USER:
             return context
-        if role == 'a':
+        if role == Profile.USER_ROLE_ADMINISTRATOR:
             user_count = User.objects.count()
-            if not user_count: user_count = 0
+            user_count = user_count or 0
             res_count = Reservation.objects.count()
-            if not res_count: res_count = 0
+            res_count = res_count or 0
             rev_count = Review.objects.count()
-            if not rev_count: rev_count = 0
+            rev_count = rev_count or 0
             context.update({'user_count': user_count, 'res_count': res_count,
                             'rev_count': rev_count, 'visual': True})
         context['access'] = True
